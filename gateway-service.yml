@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: movie-service
+          uri: lb://movie-service
+          predicates:
+            - Path=/movie-service/**
+
+        - id: catalog-service
+          uri: lb://catalog-service
+          predicates:
+            - Path=/catalog-service/**
+
+        - id: serie-service
+          uri: lb://serie-service
+          predicates:
+            - Path=/serie-service/**
+
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+#  security:
+      #    oauth2:
+        #      client:
+          #        registration:
+            #          github:
+            #            client-id:
+  #            client-secret:
+
+  zipkin:
+    base-url: http://localhost:9411/
+    enabled: true
+
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
